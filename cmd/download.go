@@ -94,7 +94,6 @@ func scrapePosts(coomerManager *coomer.Manager, url string) ([]coomer.Post, erro
 		}
 		posts = append(posts, pagePosts...)
 		scrapeIndex++
-		break
 	}
 	log.Infof("Total scraped posts: %v", len(posts))
 	return posts, nil

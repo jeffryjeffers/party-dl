@@ -53,19 +53,12 @@ type PostContent struct {
 
 func New() (*Manager, error) {
 	c := Manager{}
-	//
-	//jar := tls_client.NewCookieJar()
-	//options := []tls_client.HttpClientOption{
-	//	tls_client.WithTimeoutSeconds(30),
-	//	tls_client.WithClientProfile(profiles.Chrome_120),
-	//	tls_client.WithNotFollowRedirects(),
-	//	tls_client.WithCookieJar(jar), // create cookieJar instance and pass it as argument
-	//}
+	client := http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
 
-	client := http.Client{}
-	//if err != nil {
-	//	return nil, err
-	//}
 	c.Client = client
 	return &c, nil
 }
@@ -117,7 +110,6 @@ func (c *Manager) ScrapePage(url string, i int) ([]Post, bool, error) {
 	if res.StatusCode == 302 {
 		return nil, true, nil
 	}
-
 	var posts []Post
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
